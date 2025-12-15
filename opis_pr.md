@@ -2,8 +2,8 @@
 W celu zbudowania obrazu lokalnie, konieczna była zmiana `FROM openjdk:11-jdk-slim` -> `FROM eclipse-temurin:11-jre`, ponieważ nie mogło odnaleźć tego obrazu.
 
 Skanowanie wykazało krytyczne luki bezpieczeństwa w zależnościach aplikacji Java (m.in. 8 podatności o statusie CRITICAL w bibliotekach Spring, H2 i Tomcat), które stanowią znacznie poważniejsze zagrożenie niż problemy wykryte w systemie operacyjnym kontenera (Ubuntu), gdzie dominują zagrożenia o niskim i średnim ryzyku.
-![zad1_1](https://github.com/Yibux/kz-tbo-task4/blob/main/zad1_1.png?raw=true)
-![zad1_2](https://github.com/Yibux/kz-tbo-task4/blob/main/zad1_2.png?raw=true)
+![zad1_1](https://github.com/Yibux/task4/blob/main/zad1_1.png?raw=true)
+![zad1_2](https://github.com/Yibux/task4/blob/main/zad1_2.png?raw=true)
 
 ## Zadanie 2 (opcjonalne)
 Uruchomienie skanu semgrep dało następujące rezultaty:
@@ -220,4 +220,48 @@ Ran 448 rules on 1798 files: 24 findings.
 W sumie zostały wykryte 24 błędy.
 
 ## Zadanie 3
-Do deploymentu został utworzony plik [gc_security_scan.yaml](.github/workflows/gc_security_scan.yaml).
+Do deploymentu został utworzony plik [gc_security_scan.yaml](.github/workflows/gc_security_scan.yaml). Treść pliku:
+```
+name: Github Action Security Scan
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  security-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: |
+          docker build -t myapp:latest .
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@0.10.0
+        with:
+          image-ref: 'myapp:latest'
+          format: 'table'
+
+      - name: Install Semgrep
+        run: |
+          pip install semgrep
+
+      - name: Run Semgrep
+        run: |
+          semgrep --config p/security-audit src
+```
+
+Wyniki Github Actions dla joba: [Wyniki joba github actions](https://github.com/Yibux/task4/actions/runs/20247273118)
+![Zadanie 3 - wyniki Github Actions](https://github.com/Yibux/task4/blob/main/zad3_1.png?raw=true)
+![Zadanie 3 - wyniki Trivy](https://github.com/Yibux/task4/blob/main/zad3_2.png?raw=true)
+![Zadanie 3 - wyniki Trivy](https://github.com/Yibux/task4/blob/main/zad3_3.png?raw=true)
+![Zadanie 3 - wyniki Semgrep](https://github.com/Yibux/task4/blob/main/zad3_4.png?raw=true)
+
+## Zadanie 4
+Wyniki analizy ZAP:
+![Zadanie 4 - analiza ZAP](https://github.com/Yibux/task4/blob/main/zad4_1.png?raw=true)
+![Zadanie 4 - analiza ZAP](https://github.com/Yibux/task4/blob/main/zad4_2.png?raw=true)

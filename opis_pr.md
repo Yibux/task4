@@ -265,3 +265,6 @@ Wyniki Github Actions dla joba: [Wyniki joba github actions](https://github.com/
 Wyniki analizy ZAP:
 ![Zadanie 4 - analiza ZAP](https://github.com/Yibux/task4/blob/main/zad4_1.png?raw=true)
 ![Zadanie 4 - analiza ZAP](https://github.com/Yibux/task4/blob/main/zad4_2.png?raw=true)
+
+## Podsumowanie
+Żadne z narzędzi z osobna nie daje pełnego obrazu bezpieczeństwa. Trivy znalazło dziurawe biblioteki (czego nie widzi ZAP), ZAP znalazł brakujące nagłówki w odpowiedziach serwera (czego nie widzi Semgrep w kodzie), a Semgrep wskazał błędy logiczne w Javie. Dopiero połączenie SCA, SAST i DAST w procesie CI/CD zapewnia skuteczną ochronę.
